@@ -1,0 +1,1036 @@
+[
+    {
+        "id": "956c639306302d03",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "96f9f962f7fe3979",
+        "type": "mqtt in",
+        "z": "956c639306302d03",
+        "name": "",
+        "topic": "intern/environment/test",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "104c0f72c57e7544",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 40,
+        "wires": [
+            [
+                "a8e0a7145f6ab3b8"
+            ]
+        ]
+    },
+    {
+        "id": "a8e0a7145f6ab3b8",
+        "type": "debug",
+        "z": "956c639306302d03",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 380,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "bca5eadbe3f3fee1",
+        "type": "inject",
+        "z": "956c639306302d03",
+        "name": "Sensor Timer",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "028aa30a4d720a42"
+            ]
+        ]
+    },
+    {
+        "id": "028aa30a4d720a42",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Generate Sensor Data",
+        "func": "// Generate random temperature between 20 and 45\nlet temperature = Number((20 + Math.random() * 25).toFixed(2));\n\n// Generate random humidity between 30 and 90\nlet humidity = Number((30 + Math.random() * 60).toFixed(2));\n\n// Create sensor data\nmsg.payload = {\n    temperature: temperature,\n    humidity: humidity,\n    timestamp: new Date().toISOString()\n};\n\n// Return message\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 120,
+        "wires": [
+            [
+                "575df382829d5bc0"
+            ]
+        ]
+    },
+    {
+        "id": "575df382829d5bc0",
+        "type": "mqtt out",
+        "z": "956c639306302d03",
+        "name": "Publish Sensor Data",
+        "topic": "intern/environment/sensors",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "104c0f72c57e7544",
+        "x": 640,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "4d73c0e22913ac4a",
+        "type": "mqtt in",
+        "z": "956c639306302d03",
+        "name": "Receive Sensor Data",
+        "topic": "intern/environment/sensors",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "104c0f72c57e7544",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 280,
+        "wires": [
+            [
+                "ac4f094e18f0c240",
+                "925a7b6c6f1937fe",
+                "5398bec1397ecd26",
+                "81891d805da99988",
+                "3b347495632c75ee",
+                "ca917d7719d34fe0",
+                "698ac9212424c0c9"
+            ]
+        ]
+    },
+    {
+        "id": "6fb72c5ce985822b",
+        "type": "ui-gauge",
+        "z": "956c639306302d03",
+        "name": "Temperature Gauge",
+        "group": "a6094eb98bc24261",
+        "order": 3,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Temperature",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "°C",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "4",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "7",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": "20",
+        "max": "45",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 680,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ac4f094e18f0c240",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "extract temperature",
+        "func": "msg.payload = msg.payload.temperature;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 220,
+        "wires": [
+            [
+                "6fb72c5ce985822b"
+            ]
+        ]
+    },
+    {
+        "id": "925a7b6c6f1937fe",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Extract Humidity",
+        "func": "// Extract humidity from MQTT sensor data\nmsg.payload = msg.payload.humidity;\n\n// Return humidity value\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 400,
+        "wires": [
+            [
+                "b8588266531c241f"
+            ]
+        ]
+    },
+    {
+        "id": "b8588266531c241f",
+        "type": "ui-gauge",
+        "z": "956c639306302d03",
+        "name": "Humidity Gauge",
+        "group": "a6094eb98bc24261",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Humidity",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "4",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "7",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": "30",
+        "max": "90",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 620,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f999b597e26c281d",
+        "type": "ui-chart",
+        "z": "956c639306302d03",
+        "group": "a6094eb98bc24261",
+        "name": "\tTemperature History",
+        "label": "Temperature History",
+        "order": 4,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Temperature",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "20",
+        "ymax": "45",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": false,
+        "removeOlder": 1,
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "0",
+        "height": "0",
+        "className": "",
+        "interpolation": "linear",
+        "x": 680,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5398bec1397ecd26",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Prepare Temperature Chart",
+        "func": "// Extract temperature\nlet temperature = msg.payload.temperature;\n\n// Set chart series name\nmsg.topic = \"Temperature\";\n\n// Set current timestamp in milliseconds\nmsg.timestamp = Date.now();\n\n// Set temperature as Y-axis value\nmsg.payload = temperature;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 260,
+        "wires": [
+            [
+                "f999b597e26c281d"
+            ]
+        ]
+    },
+    {
+        "id": "81891d805da99988",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Prepare Humidity Chart",
+        "func": "// Extract humidity\nlet humidity = msg.payload.humidity;\n\n// Set chart series name\nmsg.topic = \"Humidity\";\n\n// Set current timestamp in milliseconds\nmsg.timestamp = Date.now();\n\n// Set humidity as Y-axis value\nmsg.payload = humidity;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 440,
+        "wires": [
+            [
+                "f58afae879697361"
+            ]
+        ]
+    },
+    {
+        "id": "f58afae879697361",
+        "type": "ui-chart",
+        "z": "956c639306302d03",
+        "group": "a6094eb98bc24261",
+        "name": "Humidity History",
+        "label": "Humidity History",
+        "order": 5,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Humidity (%)",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "30",
+        "ymax": "90",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": false,
+        "removeOlder": 1,
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 620,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3b347495632c75ee",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Temperature Status",
+        "func": "let temperature = msg.payload.temperature;\n\nlet status;\n\nif (temperature < 35) {\n    status = \"LOW\";\n} \nelse if (temperature <= 38) {\n    status = \"NORMAL\";\n} \nelse {\n    status = \"HIGH\";\n}\n\nmsg.payload = status;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 300,
+        "wires": [
+            [
+                "6d992d2290ea35d6"
+            ]
+        ]
+    },
+    {
+        "id": "6d992d2290ea35d6",
+        "type": "ui-text",
+        "z": "956c639306302d03",
+        "group": "a6094eb98bc24261",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Temperature Status Display",
+        "label": "Temperature Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 700,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "ca917d7719d34fe0",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Humidity Status",
+        "func": "// Extract humidity from MQTT data\nlet humidity = msg.payload.humidity;\n\nlet status;\n\nif (humidity < 40) {\n    status = \"LOW\";\n}\nelse if (humidity <= 75) {\n    status = \"NORMAL\";\n}\nelse {\n    status = \"HIGH\";\n}\n\n// Send status to dashboard\nmsg.payload = status;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 480,
+        "wires": [
+            [
+                "0e18a1d67f129737"
+            ]
+        ]
+    },
+    {
+        "id": "0e18a1d67f129737",
+        "type": "ui-text",
+        "z": "956c639306302d03",
+        "group": "a6094eb98bc24261",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "\tHumidity Status Display",
+        "label": "Humidity Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 650,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "e3dafc9a0cf0e43b",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Automatic Control Logic",
+        "func": "// Get temperature from MQTT data\nlet temperature = msg.payload.temperature;\n\n// Set automatic heater and fan states\nlet heater = false;\nlet fan = false;\n\nif (temperature < 35) {\n    heater = true;\n    fan = false;\n}\nelse if (temperature > 38) {\n    heater = false;\n    fan = true;\n}\n\n// Prepare control information\nmsg.payload = {\n    temperature: temperature,\n    heater: heater,\n    fan: fan,\n    mode: \"AUTO\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "858acb7069d9c465",
+        "type": "ui-text",
+        "z": "956c639306302d03",
+        "group": "a6094eb98bc24261",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "Heater Status",
+        "label": "Heater Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 900,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "c438d3a8df575391",
+        "type": "ui-text",
+        "z": "956c639306302d03",
+        "group": "a6094eb98bc24261",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "Fan Status",
+        "label": "Fan Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 910,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "698ac9212424c0c9",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Device State Manager",
+        "func": "\n// Get previously saved device state\nlet state = context.get(\"deviceState\") || {\n    mode: \"AUTO\",\n    temperature: null,\n    humidity: null,\n    timestamp: null,\n    heater: false,\n    fan: false\n};\n\n// ----------------------------------\n// 1. HANDLE MODE SELECTION\n// ----------------------------------\n\nif (msg.topic === \"mode/set\") {\n\n    let selectedMode = msg.payload;\n\n    if (selectedMode !== \"AUTO\" && selectedMode !== \"MANUAL\") {\n        node.warn(\"Invalid operating mode\");\n        return null;\n    }\n\n    state.mode = selectedMode;\n\n    // Recalculate devices when returning to AUTO\n    if (state.mode === \"AUTO\" && state.temperature !== null) {\n\n        if (state.temperature < 35) {\n            state.heater = true;\n            state.fan = false;\n        }\n        else if (state.temperature > 38) {\n            state.heater = false;\n            state.fan = true;\n        }\n        else {\n            state.heater = false;\n            state.fan = false;\n        }\n    }\n}\n\n// ----------------------------------\n// 2. HANDLE MANUAL HEATER CONTROL\n// ----------------------------------\n\nelse if (msg.topic === \"heater/set\") {\n\n    if (state.mode !== \"MANUAL\") {\n        node.warn(\"Switch to MANUAL mode to control Heater\");\n        return null;\n    }\n\n    if (typeof msg.payload !== \"boolean\") {\n        node.warn(\"Invalid Heater command\");\n        return null;\n    }\n\n    state.heater = msg.payload;\n}\n\n// ----------------------------------\n// 3. HANDLE MANUAL FAN CONTROL\n// ----------------------------------\n\nelse if (msg.topic === \"fan/set\") {\n\n    if (state.mode !== \"MANUAL\") {\n        node.warn(\"Switch to MANUAL mode to control Fan\");\n        return null;\n    }\n\n    if (typeof msg.payload !== \"boolean\") {\n        node.warn(\"Invalid Fan command\");\n        return null;\n    }\n\n    state.fan = msg.payload;\n}\n\n// ----------------------------------\n// 4. HANDLE SENSOR READINGS\n// ----------------------------------\n\nelse {\n\n    let data = msg.payload;\n\n    if (typeof data === \"string\") {\n        try {\n            data = JSON.parse(data);\n        } catch (err) {\n            node.warn(\"Invalid JSON sensor data\");\n            return null;\n        }\n    }\n\n    if (\n        !data ||\n        typeof data.temperature !== \"number\" ||\n        typeof data.humidity !== \"number\"\n    ) {\n        node.warn(\"Invalid sensor readings\");\n        return null;\n    }\n\n    state.temperature = data.temperature;\n    state.humidity = data.humidity;\n\n    // Save sensor timestamp\n    state.timestamp = data.timestamp || new Date().toISOString();\n\n    // Automatic control only in AUTO mode\n    if (state.mode === \"AUTO\") {\n\n        if (state.temperature < 35) {\n            state.heater = true;\n            state.fan = false;\n        }\n        else if (state.temperature > 38) {\n            state.heater = false;\n            state.fan = true;\n        }\n        else {\n            state.heater = false;\n            state.fan = false;\n        }\n    }\n}\n\n// ----------------------------------\n// 5. SAVE UPDATED STATE\n// ----------------------------------\n\ncontext.set(\"deviceState\", state);\n\n// ----------------------------------\n// 6. SEND CURRENT STATE TO DASHBOARD\n// ----------------------------------\n\nmsg.payload = {\n    temperature: state.temperature,\n    humidity: state.humidity,\n    timestamp: state.timestamp,\n    heater: state.heater,\n    fan: state.fan,\n    mode: state.mode\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 720,
+        "wires": [
+            [
+                "f5d67cb3f1f2e5c0",
+                "a359b36ca39b9a77",
+                "1c3c4b93303f5a0a",
+                "1e23776c5c168800"
+            ]
+        ]
+    },
+    {
+        "id": "f5d67cb3f1f2e5c0",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Heater Status Converter",
+        "func": "msg.payload = msg.payload.heater ? \"ON\" : \"OFF\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 640,
+        "wires": [
+            [
+                "858acb7069d9c465"
+            ]
+        ]
+    },
+    {
+        "id": "a359b36ca39b9a77",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Fan Status Converter",
+        "func": "msg.payload = msg.payload.fan ? \"ON\" : \"OFF\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 700,
+        "wires": [
+            [
+                "c438d3a8df575391"
+            ]
+        ]
+    },
+    {
+        "id": "729b93c116ed7da9",
+        "type": "ui-dropdown",
+        "z": "956c639306302d03",
+        "group": "a6094eb98bc24261",
+        "name": "Mode Selection",
+        "label": "Operating Mode",
+        "tooltip": "",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "multiple": false,
+        "chips": false,
+        "clearable": false,
+        "options": [
+            {
+                "label": "MANUAL",
+                "value": "MANUAL",
+                "type": "str"
+            },
+            {
+                "label": "AUTO",
+                "value": "AUTO",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "load",
+        "topicType": "msg",
+        "className": "",
+        "typeIsComboBox": false,
+        "msgTrigger": "onChange",
+        "x": 80,
+        "y": 500,
+        "wires": [
+            [
+                "c115ba1c9bccd637"
+            ]
+        ]
+    },
+    {
+        "id": "c115ba1c9bccd637",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Mode Handler",
+        "func": "// Identify this message as an operating mode command\nmsg.topic = \"mode/set\";\n\n// Send the selected mode to Device State Manager\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 120,
+        "y": 620,
+        "wires": [
+            [
+                "698ac9212424c0c9"
+            ]
+        ]
+    },
+    {
+        "id": "6aab162e10b46079",
+        "type": "ui-switch",
+        "z": "956c639306302d03",
+        "name": "Manual Heater Switch",
+        "label": "Heater Control",
+        "group": "a6094eb98bc24261",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "heater/set",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 120,
+        "y": 720,
+        "wires": [
+            [
+                "698ac9212424c0c9"
+            ]
+        ]
+    },
+    {
+        "id": "f68af379807baf24",
+        "type": "ui-switch",
+        "z": "956c639306302d03",
+        "name": "Manual Fan Switch",
+        "label": "Fan Control",
+        "group": "a6094eb98bc24261",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "decouple": false,
+        "topic": "fan/set",
+        "topicType": "msg",
+        "style": "",
+        "className": "",
+        "layout": "row-spread",
+        "clickableArea": "switch",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 130,
+        "y": 800,
+        "wires": [
+            [
+                "698ac9212424c0c9"
+            ]
+        ]
+    },
+    {
+        "id": "1c3c4b93303f5a0a",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "Critical Temperature Alarm",
+        "func": "\nlet temperature = msg.payload.temperature;\n\n// Validate temperature\nif (typeof temperature !== \"number\") {\n    node.warn(\"Invalid temperature for critical alarm\");\n    return null;\n}\n\n// Check critical temperature\nlet alarmActive = temperature > 40;\n\n// Get previous alarm state\nlet previousAlarm = context.get(\"criticalAlarm\") || false;\n\n// Warn only when alarm changes state\nif (alarmActive && !previousAlarm) {\n    node.warn(\"CRITICAL ALERT! Temperature is above 40°C\");\n}\n\nif (!alarmActive && previousAlarm) {\n    node.warn(\"Temperature is back to normal. Alarm cleared.\");\n}\n\n// Save alarm state\ncontext.set(\"criticalAlarm\", alarmActive);\n\n// Prepare dashboard message\nmsg.payload = alarmActive\n    ? \"CRITICAL ALERT! Temperature: \" + temperature + \" °C\"\n    : \"Normal - Temperature: \" + temperature + \" °C\";\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 760,
+        "wires": [
+            [
+                "3c649fd970a9b2a9"
+            ]
+        ]
+    },
+    {
+        "id": "3c649fd970a9b2a9",
+        "type": "ui-text",
+        "z": "956c639306302d03",
+        "group": "a6094eb98bc24261",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "\tCritical Alarm Display",
+        "label": "Temperature Safety Alert",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 940,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "1e23776c5c168800",
+        "type": "switch",
+        "z": "956c639306302d03",
+        "name": "Filter Sensor Readings",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "intern/environment/sensors",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 660,
+        "y": 820,
+        "wires": [
+            [
+                "f911248429c14917"
+            ]
+        ]
+    },
+    {
+        "id": "f911248429c14917",
+        "type": "function",
+        "z": "956c639306302d03",
+        "name": "CSV Row Formatter",
+        "func": "// Get processed sensor data\nlet data = msg.payload;\n\n// Validate required values\nif (\n    !data ||\n    typeof data.temperature !== \"number\" ||\n    typeof data.humidity !== \"number\"\n) {\n    node.warn(\"Invalid data for CSV logging\");\n    return null;\n}\n\n// Prepare CSV columns\nlet timestamp = data.timestamp || new Date().toISOString();\n\nlet temperature = data.temperature.toFixed(2);\nlet humidity = data.humidity.toFixed(2);\n\nlet heater = data.heater ? \"ON\" : \"OFF\";\nlet fan = data.fan ? \"ON\" : \"OFF\";\nlet mode = data.mode || \"AUTO\";\n\n// Create one CSV row\nmsg.payload = [\n    timestamp,\n    temperature,\n    humidity,\n    heater,\n    fan,\n    mode\n].join(\",\");;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 820,
+        "wires": [
+            [
+                "5af916fecbc11287"
+            ]
+        ]
+    },
+    {
+        "id": "5af916fecbc11287",
+        "type": "file",
+        "z": "956c639306302d03",
+        "name": "",
+        "filename": "C:\\Users\\Abbott Computer\\Documents\\NodeRED_IoT_Project\\data\\sensor_log.csv",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1330,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "104c0f72c57e7544",
+        "type": "mqtt-broker",
+        "name": "Local Mosquitto",
+        "broker": "127.0.0.1",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "a6094eb98bc24261",
+        "type": "ui-group",
+        "name": "Group 1",
+        "page": "3a4e687fe89c2a5c",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": true,
+        "disabled": false,
+        "groupType": "default",
+        "tab": ""
+    },
+    {
+        "id": "3a4e687fe89c2a5c",
+        "type": "ui-page",
+        "name": "Page 1",
+        "ui": "eec5d9deaebe90f0",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "322aa77d0a28bb21",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": 0,
+                "cols": 3
+            },
+            {
+                "name": "Tablet",
+                "px": 576,
+                "cols": 6
+            },
+            {
+                "name": "Small Desktop",
+                "px": 768,
+                "cols": 9
+            },
+            {
+                "name": "Desktop",
+                "px": 1024,
+                "cols": 12
+            }
+        ],
+        "tabs": [],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "eec5d9deaebe90f0",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "322aa77d0a28bb21",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#fcfcfd",
+            "primary": "#0d74ce",
+            "bgPage": "#f9f9fb",
+            "groupBg": "#ffffff",
+            "groupOutline": "#d9d9e0"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "0a534b9db1373f49",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@flowfuse/node-red-dashboard": "1.34.1"
+        }
+    }
+]
